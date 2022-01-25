@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    java
     id("org.springframework.boot") version "2.6.3" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
     kotlin("jvm") version "1.6.10" apply false
@@ -12,28 +13,15 @@ repositories {
     mavenCentral()
 }
 
+allprojects {
+    val javaVersion = "17"
 
-
-subprojects {
     group = "com.jojoldu"
     version = "0.0.1-SNAPSHOT"
-    java.sourceCompatibility = JavaVersion.VERSION_17
 
-    repositories {
-        mavenCentral()
-    }
-
-    apply(plugin = "java")
-    apply(plugin = "kotlin")
-    apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "kotlin-jpa")
-    apply(plugin = "kotlin-kapt")
-
-    dependencies {
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-        implementation("org.jetbrains.kotlin:kotlin-reflect")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
     tasks.withType<KotlinCompile> {
@@ -46,5 +34,25 @@ subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+}
+
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
+    apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "kotlin-jpa")
+    apply(plugin = "kotlin-kapt")
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+    }
+
 }
 
